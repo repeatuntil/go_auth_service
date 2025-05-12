@@ -1,0 +1,2 @@
+ALTER TABLE refresh_token
+DROP CONSTRAINT refresh_session_unique;
