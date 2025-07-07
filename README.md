@@ -1,6 +1,6 @@
-# Go_auth_service
+# Go_auth_service - сервис авторизации на Go
 
-# Как запустить в докере?
+# Как запустить приложение?
 ## Требования:
 - Установленный docker
 - Docker Desktop (для Windows)
@@ -11,7 +11,7 @@ docker-compose -f docker-compose.yml up -d
 ```
 ## 2 Чтобы посмотреть логи приложения:
 ```shell
-docker-compose logs app
+docker-compose logs auth_service_container
 ```
 
 ## Эндпоинты:
@@ -27,7 +27,6 @@ body:
 	"jwt":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzd..."
 }
 ```
-
 
 ```POST /api/refresh_tokens [защищен]```
 

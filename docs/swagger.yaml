@@ -1,0 +1,92 @@
+basePath: /
+definitions:
+  handlers.DeauthorizeResponse:
+    properties:
+      msg:
+        type: string
+    type: object
+  handlers.SuccessAuthResponse:
+    properties:
+      jwt:
+        type: string
+    type: object
+  handlers.UserIdResponse:
+    properties:
+      guid:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: nickita-ananiev@yandex.ru
+  description: This is a documentation for auth service written on golang.
+  title: API for authentication service
+  version: "1.0"
+paths:
+  /authorize/{userId}:
+    post:
+      description: This endpoint initializes refresh session and returns token pair.
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.SuccessAuthResponse'
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      summary: Authorizes user by his Id
+  /deauthorize:
+    post:
+      description: This endpoint checks current user session and if op succeed, remove
+        his session.
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.DeauthorizeResponse'
+        "500":
+          description: Internal Server Error
+      summary: Deauthorize user
+  /guid:
+    get:
+      description: This endpoint retreives user Id from jwt.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.UserIdResponse'
+        "401":
+          description: Unauthorized
+      summary: Get user Id
+  /refresh_tokens:
+    post:
+      description: This endpoint checks current user session and if op succeed, gives
+        a new pair.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.SuccessAuthResponse'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Refreshes user token pair
+swagger: "2.0"

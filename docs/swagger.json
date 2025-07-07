@@ -1,0 +1,139 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a documentation for auth service written on golang.",
+        "title": "API for authentication service",
+        "contact": {
+            "email": "nickita-ananiev@yandex.ru"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/authorize/{userId}": {
+            "post": {
+                "description": "This endpoint initializes refresh session and returns token pair.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Authorizes user by his Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SuccessAuthResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/deauthorize": {
+            "post": {
+                "description": "This endpoint checks current user session and if op succeed, remove his session.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Deauthorize user",
+                "responses": {
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.DeauthorizeResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/guid": {
+            "get": {
+                "description": "This endpoint retreives user Id from jwt.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user Id",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.UserIdResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/refresh_tokens": {
+            "post": {
+                "description": "This endpoint checks current user session and if op succeed, gives a new pair.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Refreshes user token pair",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SuccessAuthResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.DeauthorizeResponse": {
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.SuccessAuthResponse": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.UserIdResponse": {
+            "type": "object",
+            "properties": {
+                "guid": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

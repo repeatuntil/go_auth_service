@@ -54,6 +54,16 @@ func (h *AuthHandler) SetUpRoutes() {
 	h.router.Handle("/deauthorize", deauthorizationHandler).Methods("POST")
 }
 
+
+// @Summary Authorizes user by his Id 
+// @Description This endpoint initializes refresh session and returns token pair.
+// @Produce json
+// @Param 	userId 	path 	string 	true 	"User ID"
+// @Success 201 	{object} 	SuccessAuthResponse
+// @Failure 400 
+// @Failure 403 
+// @Failure 500 
+// @Router /authorize/{userId} [post]
 func (h *AuthHandler) AuthorizeById(w http.ResponseWriter, r *http.Request) {
 	userIdstr := mux.Vars(r)["userId"]
 	userAgent := r.UserAgent()
@@ -121,6 +131,14 @@ func (h *AuthHandler) findRefreshToken(userId string, w http.ResponseWriter, r *
 	return refreshToken, nil
 }
 
+
+// @Summary Refreshes user token pair
+// @Description This endpoint checks current user session and if op succeed, gives a new pair.
+// @Produce json
+// @Router /refresh_tokens [post]
+// @Success 201 {object} SuccessAuthResponse
+// @Failure 401
+// @Failure 500 
 func (h *AuthHandler) RefreshTokens(w http.ResponseWriter, r *http.Request) {
 	userId := r.Context().Value(AuthContextKey{Val: "user"}).(string)
 
@@ -188,6 +206,12 @@ func (h *AuthHandler) RefreshTokens(w http.ResponseWriter, r *http.Request) {
 	RenderJSON(w, SuccessAuthResponse{Jwt: newAccessToken})
 }
 
+// @Summary Get user Id
+// @Description This endpoint retreives user Id from jwt.
+// @Produce json
+// @Router /guid [get]
+// @Success 200 {object} UserIdResponse
+// @Failure 401 
 func (h *AuthHandler) GetUserId(w http.ResponseWriter, r *http.Request) {
 	userId := r.Context().Value(AuthContextKey{Val: "user"}).(string)
 	_, err := h.findRefreshToken(userId, w, r)
@@ -195,6 +219,12 @@ func (h *AuthHandler) GetUserId(w http.ResponseWriter, r *http.Request) {
 	RenderJSON(w, UserIdResponse{Id: userId})
 }
 
+// @Summary Deauthorize user
+// @Description This endpoint checks current user session and if op succeed, remove his session.
+// @Produce json
+// @Router /deauthorize [post]
+// @Success 401 {object} DeauthorizeResponse
+// @Failure 500 
 func (h *AuthHandler) Deauthorize(w http.ResponseWriter, r *http.Request) {
 	userId := r.Context().Value(AuthContextKey{Val: "user"}).(string)
 

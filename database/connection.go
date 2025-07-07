@@ -29,7 +29,6 @@ func (c *dbConnection) Init(url, driver, dbName string, maxConn int, maxIdleTime
 
 	logger.Debug.Println("dbURL -", c.baseUrl)
 	if err := c.createDBIfNotExists(dbName); err != nil {
-		logger.Debug.Printf("мудила\n")
 		return err
 	}
 
